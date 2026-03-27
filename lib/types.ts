@@ -32,6 +32,7 @@ export interface GameState {
   players: PublicPlayer[];
   winner: string | null;
   log: string[];
+  maxPlayers: number;
 }
 
 export interface LiarCalledEvent {

@@ -75,6 +75,7 @@ function getPublicState(room) {
     })),
     winner: room.winner,
     log: room.log,
+    maxPlayers: room.maxPlayers,
   };
 }
 
@@ -132,8 +133,9 @@ app.prepare().then(() => {
 
   io.on('connection', (socket) => {
 
-    socket.on('create_room', ({ name }) => {
+    socket.on('create_room', ({ name, maxPlayers }) => {
       const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const clampedMax = Math.min(6, Math.max(2, parseInt(maxPlayers) || 4));
       const room = {
         id: roomId,
         players: [{
@@ -148,6 +150,7 @@ app.prepare().then(() => {
         pendingShooter: null,
         winner: null,
         log: [],
+        maxPlayers: clampedMax,
       };
       rooms.set(roomId, room);
       socket.join(roomId);
@@ -160,7 +163,7 @@ app.prepare().then(() => {
       const room = rooms.get(roomId.toUpperCase());
       if (!room) { socket.emit('error_msg', 'Salon introuvable'); return; }
       if (room.phase !== 'lobby') { socket.emit('error_msg', 'Partie déjà commencée'); return; }
-      if (room.players.length >= 4) { socket.emit('error_msg', 'Salon complet (max 4)'); return; }
+      if (room.players.length >= room.maxPlayers) { socket.emit('error_msg', `Salon complet (max ${room.maxPlayers})`); return; }
       if (room.players.find(p => p.name === name)) { socket.emit('error_msg', 'Ce pseudo est déjà pris'); return; }
 
       room.players.push({

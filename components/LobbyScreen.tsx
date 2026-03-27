@@ -43,7 +43,7 @@ export default function LobbyScreen({ gameState, myId, roomId }: Props) {
         {/* Players */}
         <div className="space-y-2">
           <p className="text-stone-400 text-xs uppercase tracking-widest mb-3">
-            Joueurs ({gameState.players.length}/4)
+            Joueurs ({gameState.players.length}/{gameState.maxPlayers})
           </p>
           {gameState.players.map(player => (
             <div
@@ -64,7 +64,7 @@ export default function LobbyScreen({ gameState, myId, roomId }: Props) {
           ))}
 
           {/* Empty slots */}
-          {Array.from({ length: 4 - gameState.players.length }).map((_, i) => (
+          {Array.from({ length: gameState.maxPlayers - gameState.players.length }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-lg bg-stone-800/40 border border-dashed border-stone-700">
               <span className="text-xl opacity-30">⌛</span>
               <span className="text-stone-600 text-sm">En attente...</span>

@@ -8,6 +8,7 @@ import { getSocket } from '@/lib/socket';
 export default function Home() {
   const [name, setName] = useState('');
   const [roomId, setRoomId] = useState('');
+  const [maxPlayers, setMaxPlayers] = useState(4);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState('');
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function Home() {
     if (!name.trim()) { setError('Entre ton pseudo'); return; }
     setError('');
     setLoading('create');
-    getSocket().emit('create_room', { name: name.trim() });
+    getSocket().emit('create_room', { name: name.trim(), maxPlayers });
   }
 
   function handleJoin() {
@@ -79,6 +80,27 @@ export default function Home() {
           <div className="flex-1 h-px bg-stone-700" />
           <span className="text-stone-500 text-xs">CRÉER</span>
           <div className="flex-1 h-px bg-stone-700" />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-amber-300 text-xs uppercase tracking-widest mb-2">
+            Nombre de joueurs
+          </label>
+          <div className="flex gap-2">
+            {[2, 3, 4, 5, 6].map(n => (
+              <button
+                key={n}
+                onClick={() => setMaxPlayers(n)}
+                className={`flex-1 py-2 rounded-lg font-bold text-sm transition-colors ${
+                  maxPlayers === n
+                    ? 'bg-amber-600 text-stone-950'
+                    : 'bg-stone-800 text-stone-400 hover:bg-stone-700 hover:text-amber-300'
+                }`}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
         </div>
 
         <button
@@ -132,7 +154,7 @@ export default function Home() {
       <div className="mt-6 max-w-md text-stone-500 text-xs text-center leading-relaxed">
         <p>Jouez des cartes face cachée en prétendant qu'elles correspondent à la carte du tour.</p>
         <p className="mt-1">Appelez le bluff de votre adversaire... ou assumez les conséquences.</p>
-        <p className="mt-2 text-red-700">2 à 4 joueurs • Une balle dans le barillet</p>
+        <p className="mt-2 text-red-700">2 à 6 joueurs • Une balle dans le barillet</p>
       </div>
     </main>
   );
