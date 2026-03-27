@@ -1,26 +1,121 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #0c0a09;
+  color: #fef3c7;
+  font-family: 'Courier New', Courier, monospace;
 }
+
+/* ── Card flip 3D ────────────────────────────────────────────── */
+.card-3d-wrap {
+  perspective: 800px;
+}
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+.card-3d.flipped {
+  transform: rotateY(180deg);
+}
+.card-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+}
+.card-face-back {
+  transform: rotateY(180deg);
+}
+
+/* Carte choisie qui tremble avant le flip */
+@keyframes card-pick {
+  0%,100% { transform: translateY(0) scale(1); }
+  30%     { transform: translateY(-12px) scale(1.06); }
+  60%     { transform: translateY(-8px) scale(1.04); }
+}
+.card-picking { animation: card-pick 0.35s ease-out forwards; }
+
+/* ── Mort : skull explosion ───────────────────────────────────── */
+@keyframes skull-pop {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  50%  { transform: scale(1.4) rotate(5deg);  opacity: 1; }
+  70%  { transform: scale(0.9) rotate(-2deg); opacity: 1; }
+  100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+}
+@keyframes skull-shake {
+  0%,100% { transform: scale(1) rotate(0deg); }
+  20%     { transform: scale(1.05) rotate(-5deg); }
+  40%     { transform: scale(1.05) rotate(5deg);  }
+  60%     { transform: scale(1.05) rotate(-3deg); }
+  80%     { transform: scale(1.05) rotate(3deg);  }
+}
+.skull-pop   { animation: skull-pop   0.5s cubic-bezier(0.22,1,0.36,1) forwards; }
+.skull-shake { animation: skull-shake 0.4s ease-in-out 0.5s infinite; }
+
+/* ── Screen flash ────────────────────────────────────────────── */
+@keyframes flash-red {
+  0%   { opacity: 0; }
+  10%  { opacity: 0.9; }
+  70%  { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+
+@keyframes flash-green {
+  0%   { opacity: 0; }
+  10%  { opacity: 0.85; }
+  70%  { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+
+.flash-red   { animation: flash-red   1s ease-out forwards; }
+.flash-green { animation: flash-green 1s ease-out forwards; }
+
+/* ── BANG text ───────────────────────────────────────────────── */
+@keyframes bang-in {
+  0%   { transform: scale(0.2) rotate(-10deg); opacity: 0; }
+  50%  { transform: scale(1.3) rotate(3deg);   opacity: 1; }
+  75%  { transform: scale(0.95) rotate(-1deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg);     opacity: 1; }
+}
+
+@keyframes click-in {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+.bang-in  { animation: bang-in  0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.click-in { animation: click-in 0.4s ease-out forwards; }
+
+/* ── Trigger button pulse ────────────────────────────────────── */
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  50%       { box-shadow: 0 0 24px 8px rgba(239, 68, 68, 0.55); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  20%       { transform: translateX(-6px) rotate(-3deg); }
+  40%       { transform: translateX(6px)  rotate(3deg); }
+  60%       { transform: translateX(-4px) rotate(-2deg); }
+  80%       { transform: translateX(4px)  rotate(2deg); }
+}
+
+.pulse-red { animation: pulse-red 1.4s ease-in-out infinite; }
+.shake     { animation: shake 0.45s ease-in-out; }
+
+/* ── Chamber glow when revealed ─────────────────────────────── */
+@keyframes bullet-reveal {
+  0%   { box-shadow: 0 0 0 0 rgba(239,68,68,0); transform: scale(1); }
+  50%  { box-shadow: 0 0 20px 6px rgba(239,68,68,0.8); transform: scale(1.25); }
+  100% { box-shadow: 0 0 10px 3px rgba(239,68,68,0.4); transform: scale(1.15); }
+}
+
+.bullet-reveal { animation: bullet-reveal 0.5s ease-out forwards; }
+
+/* ── Scrollbar dark ──────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: #1c1917; }
+::-webkit-scrollbar-thumb { background: #78716c; border-radius: 3px; }
