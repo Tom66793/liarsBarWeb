@@ -72,6 +72,7 @@ function getPublicState(room) {
       status: p.status,
       cardsRemaining: p.cardsRemaining,
       isHost: p.isHost,
+      revolverPulls: p.revolverPulls ?? 0,
     })),
     winner: room.winner,
     log: room.log,
@@ -104,6 +105,7 @@ function pickCard(room, playerId, cardIndex) {
   if (!player || player.status === 'dead') return { died: false, cardIndex, deathPosition: null };
 
   const died = cardIndex === player.deathPosition;
+  player.revolverPulls = (player.revolverPulls ?? 0) + 1;
   if (died) {
     player.status = 'dead';
     player.hand = [];
@@ -141,7 +143,7 @@ app.prepare().then(() => {
         players: [{
           id: socket.id, name, hand: [], status: 'alive',
           deathPosition: Math.floor(Math.random() * 6),
-          cardsRemaining: 6, isHost: true,
+          cardsRemaining: 6, revolverPulls: 0, isHost: true,
         }],
         phase: 'lobby',
         currentPlayerIndex: 0,
@@ -169,7 +171,7 @@ app.prepare().then(() => {
       room.players.push({
         id: socket.id, name, hand: [], status: 'alive',
         deathPosition: Math.floor(Math.random() * 6),
-        cardsRemaining: 6, isHost: false,
+        cardsRemaining: 6, revolverPulls: 0, isHost: false,
       });
       socket.join(room.id);
       socket.emit('room_joined', { roomId: room.id, playerId: socket.id });

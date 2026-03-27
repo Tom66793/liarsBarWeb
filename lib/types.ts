@@ -14,6 +14,7 @@ export interface PublicPlayer {
   status: PlayerStatus;
   cardsRemaining: number;
   isHost: boolean;
+  revolverPulls: number;
 }
 
 export interface LastPlay {
