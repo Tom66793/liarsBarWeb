@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { getSocket } from '@/lib/socket';
 
 export default function Home() {
@@ -120,7 +121,15 @@ export default function Home() {
         )}
       </div>
 
-      <div className="mt-8 max-w-md text-stone-500 text-xs text-center leading-relaxed">
+      <Link
+        href="/irl"
+        className="mt-4 w-full max-w-md flex items-center justify-center gap-3 bg-stone-800 hover:bg-stone-700 border border-stone-600 hover:border-amber-600 text-amber-300 font-bold py-4 rounded-xl transition-colors uppercase tracking-widest text-sm"
+      >
+        🃏 Jeu IRL
+        <span className="text-stone-500 text-xs font-normal normal-case tracking-normal">— Jouer en vrai avec des amis</span>
+      </Link>
+
+      <div className="mt-6 max-w-md text-stone-500 text-xs text-center leading-relaxed">
         <p>Jouez des cartes face cachée en prétendant qu'elles correspondent à la carte du tour.</p>
         <p className="mt-1">Appelez le bluff de votre adversaire... ou assumez les conséquences.</p>
         <p className="mt-2 text-red-700">2 à 4 joueurs • Une balle dans le barillet</p>
